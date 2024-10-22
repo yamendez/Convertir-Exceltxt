@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="apache.poi.ooxml1" type="repository">
+  <library name="apache.poi.ooxml" type="repository">
     <properties maven-id="org.apache.poi:poi-ooxml:5.2.5" />
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi-ooxml/5.2.5/poi-ooxml-5.2.5.jar!/" />

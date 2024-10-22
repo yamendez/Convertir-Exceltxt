@@ -7,6 +7,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -79,9 +81,8 @@ public class LeerExcel {
      * @throws IOException Si hubo un error al leer el archivo Excel
      * @throws ValoresNulosException Si hay valores nulos en la matriz
      */
-    public void leerXls() throws IOException, ValoresNulosException {
+    public void leerXls() throws IOException, ValoresNulosException{
         Sheet sheet = workbook.getSheetAt(0);
-        int j = 0;
 
         // Se obtienen el número de filas y columnas
         int[] prueba = Stream.of(sheet).flatMapToInt(s -> {
@@ -92,11 +93,13 @@ public class LeerExcel {
                     if(b != null && r == 0 && !b.toString().isEmpty()){
                         c++;
                     }
+
                 }
 
-                if(a.getCell(c-1) != null){
+                if(a.getCell(c-1) != null && !a.getCell(c - 1).toString().isEmpty()){
                     r++;
                 }
+
             }
             return IntStream.of(new int[]{r,c});
         }).toArray();
@@ -106,17 +109,37 @@ public class LeerExcel {
 
         // Se crea un arreglo con el número de filas y columnas
         tabla = new String[rows][columns];
+        //System.out.println("filas:"+rows+", columnas:"+columns);
 
-        for(Row fila: sheet){
-            for (Cell celda: fila){
-                if(celda.getColumnIndex() == j){
-                    tabla[fila.getRowNum()][celda.getColumnIndex()] = celda.toString();
+        // Llenando el arreglo de datos
+        Stream.of(sheet).forEach(s -> {
+            int i = 0;
+            for(Row fila: s){
+                for (Cell celda: fila){
+                    if(celda.getColumnIndex() == i && fila.getRowNum() <= rows-1){
+                        tabla[fila.getRowNum()][celda.getColumnIndex()] = celda.toString();
+                    }
+
+                    i++;
                 }
-
-                j++;
+                i = 0;
             }
-            j = 0;
-        }
+        });
+
+//        for(Row fila: sheet){
+//            for (Cell celda: fila){
+//                if(celda.getColumnIndex() == j && fila.getRowNum() <= rows-1){
+////                    if(fila.getRowNum() >= 2968) {
+////                        System.out.println("c_index=" + celda.getColumnIndex() + ", j=" + j);
+////                        System.out.println("row_num="+fila.getRowNum());
+////                    }
+//                    tabla[fila.getRowNum()][celda.getColumnIndex()] = celda.toString();
+//                }
+//
+//                j++;
+//            }
+//            j = 0;
+//        }
 
         // Se llama al método Escribir
         new EscribirArchivo(fileRead, tabla, nomTabla, campNumeros, checkbox, insertRB, deleteRB).escribir();

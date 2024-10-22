@@ -1,6 +1,7 @@
 package ConvertirTabla;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -43,7 +44,7 @@ public class ConvertirTablatxt extends JPanel{
      * y pasa los datos a un archivo de texto plano en formato SQL.
      *
      * @author Yailiana Mendez
-     * @since 2024-9-6
+     * @since 2024-09-06
      */
 
 public ConvertirTablatxt() {
@@ -117,8 +118,8 @@ public ConvertirTablatxt() {
                     JOptionPane.showMessageDialog(null, "Operacion realizada correctamente",
                             "Mensaje", JOptionPane.INFORMATION_MESSAGE);
 
-                    assert workbook != null;
-                    workbook.close();
+                    if (workbook != null) workbook.close();
+
 
                     txtBuscar.setText("");
                     txtNomTabla.setText("");
@@ -139,11 +140,6 @@ public ConvertirTablatxt() {
 
             ButtonModel bmodel = boton.getModel();
             chbAgreAtri.setEnabled(!bmodel.isSelected());
-            /*if(bmodel.isSelected()){
-                chbAgreAtri.setEnabled(false);
-            }else{
-                chbAgreAtri.setEnabled(true);
-            }*/
         }
     });
     cmbTabla.addActionListener(new ActionListener() {
