@@ -7,8 +7,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -21,8 +19,8 @@ import java.util.stream.Stream;
 public class LeerExcel {
 
     private Workbook workbook;
-    private File fileRead, fileWrite;
-    private FileWriter escribir;
+    private final File fileRead;
+    private File fileWrite;
     private String[][] tabla;
     private String nomTabla, campNumeros;
     private boolean checkbox, insertRB, deleteRB;
@@ -101,7 +99,7 @@ public class LeerExcel {
                 }
 
             }
-            return IntStream.of(new int[]{r,c});
+            return IntStream.of(r,c);
         }).toArray();
 
         int rows = prueba[0];
@@ -203,7 +201,7 @@ public class LeerExcel {
         data = linea.split(separador);
 
         // Numero de columnas
-        for(String value: data){
+        for(String ignored : data){
             num_column ++;
         }
 
@@ -217,16 +215,13 @@ public class LeerExcel {
 
         br.reset();
         linea = br.readLine();
-        data = linea.split(separador);
         int i = 0;
 
         // Guardando los datos en un Arreglo
         while (linea != null) {
             data = linea.split(separador);
 
-            for (int j = 0; j < tabla[0].length; j++) {
-                tabla[i][j] = data[j];
-            }
+            System.arraycopy(data, 0, tabla[i], 0, tabla[0].length);
 
             linea = br.readLine();
             i++;

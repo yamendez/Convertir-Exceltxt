@@ -49,108 +49,93 @@ public class ConvertirTablatxt extends JPanel{
 
 public ConvertirTablatxt() {
     this.add(panelMain);
-    cmbTabla.addItemListener(new ItemListener() {
-        @Override
-        public void itemStateChanged(ItemEvent e) {
+    cmbTabla.addItemListener(e -> {
 
+    });
+    btnBuscar.addActionListener(e -> {
+        JFileChooser fc = new JFileChooser();
+
+        File dirActual = new File(System.getProperty("user.dir"));
+
+        fc.setCurrentDirectory(dirActual);
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos Excel", "csv", "xls", "xlsx");
+
+        fc.addChoosableFileFilter(filter);
+        fc.setFileFilter(filter);
+        int seleccion = fc.showOpenDialog(fc);
+
+        if(seleccion == JFileChooser.APPROVE_OPTION){
+            File fichero = fc.getSelectedFile();
+            txtBuscar.setText(fichero.getAbsolutePath());
+            direccion = fichero.toURI().toString();
+            directorio = fichero.getParentFile();
         }
     });
-    btnBuscar.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser fc = new JFileChooser();
+    btnEjecutar.addActionListener(e -> {
+        try {
+            nomTabla = txtNomTabla.getText().toUpperCase();
+            campNumeros = txtNumeros.getText();
+            boolean checkbox = chbAgreAtri.isSelected();
+            boolean insertRButton = rbInsert.isSelected();
+            boolean deleteRButton = rbDelete.isSelected();
 
-            File dirActual = new File(System.getProperty("user.dir"));
+            Date d = new Date();
+            DateFormat df = new SimpleDateFormat("yyyyMMdd");
 
-            fc.setCurrentDirectory(dirActual);
+            if (direccion == null || nomTabla.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Debe llenar todos los " +
+                        "campos", "Error Campos Vacios", JOptionPane.ERROR_MESSAGE);
+            } else {
+                File file = new File(directorio, nomTabla + "-" + df.format(d) + ".txt");
 
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos Excel", "csv", "xls", "xlsx");
+                URI uri = new URI(direccion);
+                URL url = uri.toURL();
 
-            fc.addChoosableFileFilter(filter);
-            fc.setFileFilter(filter);
-            int seleccion = fc.showOpenDialog(fc);
+                Workbook workbook = null;
+                FileInputStream fileInputStream = new FileInputStream(new File(url.toURI()));
 
-            if(seleccion == JFileChooser.APPROVE_OPTION){
-                File fichero = fc.getSelectedFile();
-                txtBuscar.setText(fichero.getAbsolutePath());
-                direccion = fichero.toURI().toString();
-                directorio = fichero.getParentFile();
-            }
-        }
-    });
-    btnEjecutar.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                nomTabla = txtNomTabla.getText().toUpperCase();
-                campNumeros = txtNumeros.getText();
-                boolean checkbox = chbAgreAtri.isSelected();
-                boolean insertRButton = rbInsert.isSelected();
-                boolean deleteRButton = rbDelete.isSelected();
-
-                Date d = new Date();
-                DateFormat df = new SimpleDateFormat("yyyyMMdd");
-
-                if (direccion == null || nomTabla.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Debe llenar todos los " +
-                            "campos", "Error Campos Vacios", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    File file = new File(directorio, nomTabla + "-" + df.format(d) + ".txt");
-
-                    URI uri = new URI(direccion);
-                    URL url = uri.toURL();
-
-                    Workbook workbook = null;
-                    FileInputStream fileInputStream = new FileInputStream(new File(url.toURI()));
-
-                    if(direccion.endsWith(".xls") || direccion.endsWith(".xlsx")){
-                        workbook = WorkbookFactory.create(fileInputStream);
-                        new LeerExcel(file,workbook, nomTabla, campNumeros, checkbox, insertRButton, deleteRButton).leerXls();
-                    }
-                    else if(direccion.endsWith(".csv")) {
-
-                        new LeerExcel(file, nomTabla, campNumeros, checkbox, insertRButton, deleteRButton,
-                                new File(url.toURI())).Leer();
-
-                        System.gc();
-                    }
-
-                    JOptionPane.showMessageDialog(null, "Operacion realizada correctamente",
-                            "Mensaje", JOptionPane.INFORMATION_MESSAGE);
-
-                    if (workbook != null) workbook.close();
-
-
-                    txtBuscar.setText("");
-                    txtNomTabla.setText("");
-                    txtNumeros.setText("");
-
+                if(direccion.endsWith(".xls") || direccion.endsWith(".xlsx")){
+                    workbook = WorkbookFactory.create(fileInputStream);
+                    new LeerExcel(file,workbook, nomTabla, campNumeros, checkbox, insertRButton, deleteRButton).leerXls();
                 }
-            } catch (Exception ex){
-                JOptionPane.showMessageDialog(null, "Error: " + ex, "Error", JOptionPane.ERROR_MESSAGE);
-                throw new RuntimeException(ex);
+                else if(direccion.endsWith(".csv")) {
+
+                    new LeerExcel(file, nomTabla, campNumeros, checkbox, insertRButton, deleteRButton,
+                            new File(url.toURI())).Leer();
+
+                    System.gc();
+                }
+
+                JOptionPane.showMessageDialog(null, "Operacion realizada correctamente",
+                        "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+
+                if (workbook != null) workbook.close();
+
+
+                txtBuscar.setText("");
+                txtNomTabla.setText("");
+                txtNumeros.setText("");
+
             }
+        } catch (Exception ex){
+            JOptionPane.showMessageDialog(null, "Error: " + ex, "Error", JOptionPane.ERROR_MESSAGE);
+            throw new RuntimeException(ex);
         }
     });
 
-    rbDelete.addChangeListener(new ChangeListener() {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            AbstractButton boton = (AbstractButton) e.getSource();
+    rbDelete.addChangeListener(e -> {
+        AbstractButton boton = (AbstractButton) e.getSource();
 
-            ButtonModel bmodel = boton.getModel();
-            chbAgreAtri.setEnabled(!bmodel.isSelected());
-        }
+        ButtonModel bmodel = boton.getModel();
+        chbAgreAtri.setEnabled(!bmodel.isSelected());
     });
-    cmbTabla.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            int indexCmb = cmbTabla.getSelectedIndex();
-            String nombre = dataCmb[indexCmb][1];
-            String campos = dataCmb[indexCmb][2];
-            txtNomTabla.setText(nombre);
-            txtNumeros.setText(campos);
-        }
+    cmbTabla.addActionListener(e -> {
+        int indexCmb = cmbTabla.getSelectedIndex();
+        String nombre = dataCmb[indexCmb][1];
+        String campos = dataCmb[indexCmb][2];
+        txtNomTabla.setText(nombre);
+        txtNumeros.setText(campos);
     });
 }
 
@@ -158,7 +143,7 @@ public ConvertirTablatxt() {
         // TODO: place custom component creation code here
         File file = new File(System.getProperty("user.dir"), "Tablas.txt");
         if(!file.exists()){
-            FileWriter writer = new FileWriter(file);
+            new FileWriter(file);
             cmbTabla = new JComboBox<>();
         } else{
             if(file.length() == 0){
