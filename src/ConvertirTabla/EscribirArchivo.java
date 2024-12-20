@@ -112,6 +112,7 @@ public class EscribirArchivo{
                 } else {
                     // Elimina espacios en blanco
                     tabla[i][j] = tabla[i][j].trim();
+                    tabla[i][j] = tabla[i][j].isEmpty() ? " " : tabla[i][j];//linea agregada
                     builder.append("'").append(tabla[i][j]).append("'").append(", ");
                 }
                 cont++;
