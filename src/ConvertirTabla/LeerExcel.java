@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -87,16 +88,23 @@ public class LeerExcel {
             int r = 0;
             int c = 0;
             for(Row a: s){
-                for(Cell b: a){
-                    if(b != null && r == 0 && !b.toString().isEmpty()){
+                for(Cell b: a) {
+                    if (b != null && r == 0 && !b.toString().isEmpty()) {
                         c++;
                     }
 
                 }
+                AtomicBoolean vacio = new AtomicBoolean(false);
+                a.forEach(cell -> {
+                    vacio.set(cell.toString().isEmpty());
+                });
 
-                if(a.getCell(c-1) != null && !a.getCell(c - 1).toString().isEmpty()){
+                if(!vacio.get()){
                     r++;
                 }
+//                if(a.getCell(c-1) != null && !a.getCell(c - 1).toString().isEmpty()){
+//                    r++;
+//                }
 
             }
             return IntStream.of(r,c);
@@ -114,7 +122,7 @@ public class LeerExcel {
             int i = 0;
             for(Row fila: s){
                 for (Cell celda: fila){
-                    if(celda.getColumnIndex() == i && fila.getRowNum() <= rows-1){
+                    if( fila.getRowNum() <= rows-1){//celda.getColumnIndex() == i &&
                         tabla[fila.getRowNum()][celda.getColumnIndex()] = celda.toString();
                     }
 

@@ -92,13 +92,16 @@ public class EscribirArchivo{
 
                 // Mensaje de error en caso de recibir un valor nulo
                 if(tabla[i][j] == null){
-                    String[] c = campos.split(",");
+                    tabla[i][j] = "";
+                    /*String[] c = campos.split(",");
                     String m = "El archivo contiene valores nulos, revise la columna:" + c[j] +", fila: " + (i+1);
 
                     JOptionPane.showMessageDialog(null,m, "Valor nulo", JOptionPane.ERROR_MESSAGE);
-                    throw new ValoresNulosException("El archivo contiene valores nulos");
+                    throw new ValoresNulosException("El archivo contiene valores nulos");*/
 
                 }
+
+
                 // Elimina comillas dobles
                 if(tabla[i][j].contains("\"")){ tabla[i][j] = tabla[i][j].replace("\"", "");}
 
@@ -106,8 +109,10 @@ public class EscribirArchivo{
                 if(columnVacia) {
                     // Elimina espacios en blanco
                     tabla[i][j] = tabla[i][j].trim();
+                    tabla[i][j] = tabla[i][j].isEmpty() ? " " : tabla[i][j];//linea agregada
                     builder.append("'").append(tabla[i][j]).append("'").append(", ");
                 } else if(columnaExiste(cont, selecColumn)){
+                    tabla[i][j] = tabla[i][j].isEmpty()? tabla[i][j] = "0": tabla[i][j];
                     builder.append(tabla[i][j]).append(", ");
                 } else {
                     // Elimina espacios en blanco
@@ -169,15 +174,21 @@ public class EscribirArchivo{
             int cont = 0;
 
             for(int j = 0; j < tabla[0].length; j++) {
+                if(tabla[i][j] == null){
+                    tabla[i][j] = "";
+                }
                 if (columnVacia) {
                     // Elimina espacios en blanco
                     tabla[i][j] = tabla[i][j].trim();
+                    tabla[i][j] = tabla[i][j].isEmpty()? " ": tabla[i][j];
                     builder.append(tabla[0][j]).append("='".concat(tabla[i][j].concat("' and ")));
                 } else if (columnaExiste(cont, selecColumn)) {
+                    tabla[i][j] = tabla[i][j].isEmpty()? "0": tabla[i][j];
                     builder.append(tabla[0][j]).append("=".concat(tabla[i][j].concat(" and ")));
                 } else {
                     // Elimina espacios en blanco
                     tabla[i][j] = tabla[i][j].trim();
+                    tabla[i][j] = tabla[i][j].isEmpty()? " ": tabla[i][j];
                     builder.append(tabla[0][j]).append("='".concat(tabla[i][j].concat("' and ")));
                 }
                 cont ++;
