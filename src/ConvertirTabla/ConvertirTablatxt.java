@@ -105,8 +105,8 @@ public ConvertirTablatxt() {
 
 
                 txtBuscar.setText("");
-                txtNomTabla.setText("");
-                txtNumeros.setText("");
+//                txtNomTabla.setText("");
+//                txtNumeros.setText("");
 
             }
         } catch (Exception ex){

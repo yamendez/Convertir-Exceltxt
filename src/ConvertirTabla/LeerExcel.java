@@ -1,10 +1,7 @@
 package ConvertirTabla;
 
 import Excepciones.ValoresNulosException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -102,9 +99,6 @@ public class LeerExcel {
                 if(!vacio.get()){
                     r++;
                 }
-//                if(a.getCell(c-1) != null && !a.getCell(c - 1).toString().isEmpty()){
-//                    r++;
-//                }
 
             }
             return IntStream.of(r,c);
@@ -115,7 +109,8 @@ public class LeerExcel {
 
         // Se crea un arreglo con el número de filas y columnas
         tabla = new String[rows][columns];
-        //System.out.println("filas:"+rows+", columnas:"+columns);
+
+        DataFormatter dataFormatter = new DataFormatter();
 
         // Llenando el arreglo de datos
         Stream.of(sheet).forEach(s -> {
@@ -123,29 +118,17 @@ public class LeerExcel {
             for(Row fila: s){
                 for (Cell celda: fila){
                     if( fila.getRowNum() <= rows-1){//celda.getColumnIndex() == i &&
-                        tabla[fila.getRowNum()][celda.getColumnIndex()] = celda.toString();
-                    }
 
+                        // Cambiando datos a formato de texto y agregándolos al arreglo
+                        tabla[fila.getRowNum()][celda.getColumnIndex()] = dataFormatter.formatCellValue(celda);
+
+                    }
                     i++;
                 }
+
                 i = 0;
             }
         });
-
-//        for(Row fila: sheet){
-//            for (Cell celda: fila){
-//                if(celda.getColumnIndex() == j && fila.getRowNum() <= rows-1){
-////                    if(fila.getRowNum() >= 2968) {
-////                        System.out.println("c_index=" + celda.getColumnIndex() + ", j=" + j);
-////                        System.out.println("row_num="+fila.getRowNum());
-////                    }
-//                    tabla[fila.getRowNum()][celda.getColumnIndex()] = celda.toString();
-//                }
-//
-//                j++;
-//            }
-//            j = 0;
-//        }
 
         // Se llama al método Escribir
         new EscribirArchivo(fileRead, tabla, nomTabla, campNumeros, checkbox, insertRB, deleteRB).escribir();

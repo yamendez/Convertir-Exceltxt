@@ -20,6 +20,7 @@ public class ViewMenu extends JFrame{
     private JPanel mainPanel;
     private JPanel vTabla;
     private JPanel conTablatxt;
+    private JMenuBar menuBar;
 
     public ViewMenu() {
         tabMenu.addMouseListener(new MouseAdapter() {
@@ -58,6 +59,7 @@ public class ViewMenu extends JFrame{
         URI uri = new URI(direccion);
         URL url = uri.toURL();
         tabMenu = new JTabbedPane();
+        //menuBar.
         if(archivo.exists()) {
 
             tabMenu.addTab("Tablas", null, new ViewTabla(), null);

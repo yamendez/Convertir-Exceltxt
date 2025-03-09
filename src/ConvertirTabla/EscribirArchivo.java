@@ -5,8 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import Excepciones.ValoresNulosException;
 
-import javax.swing.*;
-
 public class EscribirArchivo{
 
     private FileWriter fw;
@@ -90,15 +88,9 @@ public class EscribirArchivo{
 
             for (int j = 0; j < tabla[0].length; j++){
 
-                // Mensaje de error en caso de recibir un valor nulo
+                // si un campo es nulo se le asigna el valor ""
                 if(tabla[i][j] == null){
                     tabla[i][j] = "";
-                    /*String[] c = campos.split(",");
-                    String m = "El archivo contiene valores nulos, revise la columna:" + c[j] +", fila: " + (i+1);
-
-                    JOptionPane.showMessageDialog(null,m, "Valor nulo", JOptionPane.ERROR_MESSAGE);
-                    throw new ValoresNulosException("El archivo contiene valores nulos");*/
-
                 }
 
 
