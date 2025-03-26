@@ -104,7 +104,7 @@ public ConvertirTablatxt() {
                 if (workbook != null) workbook.close();
 
 
-                txtBuscar.setText("");
+                //txtBuscar.setText("");
 //                txtNomTabla.setText("");
 //                txtNumeros.setText("");
 
