@@ -40,7 +40,9 @@
                   <component id="fdf34" class="javax.swing.JTable" binding="table1" custom-create="true" default-binding="true">
                     <constraints/>
                     <properties>
+                      <autoCreateRowSorter value="false"/>
                       <autoResizeMode value="2"/>
+                      <enabled value="true"/>
                     </properties>
                   </component>
                 </children>

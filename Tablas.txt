@@ -1,3 +1,2 @@
-1|prueba2|3
-2|tabla1csv|2,3,4,5,6,7,9,11,14,15,22,23
-3|libro1|1
+1|Inventario|3,5
+2|Productos|8,9

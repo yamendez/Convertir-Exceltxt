@@ -1,5 +1,6 @@
 package CRUDTablas;
 
+import javax.swing.*;
 import java.io.*;
 
 public class LeerTabla {
@@ -20,6 +21,11 @@ public class LeerTabla {
             br.mark(100000000);
             String linea = br.readLine();
 
+            if(linea == null) {
+                JOptionPane.showMessageDialog(null, "El archivo Tablas.txt no contiene " +
+                        "informacion no hay cambios para revertir");
+                return null;
+            }
 
             String[] data;
             int num_filas = 0;

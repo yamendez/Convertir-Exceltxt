@@ -109,8 +109,16 @@ public class ViewTabla extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(!(table1.getSelectedRow() == -1)) {
-                    table1.setValueAt(txtNombre.getText(), selectedRow, 1);
-                    table1.setValueAt(txtCampNum.getText(), selectedRow, 2);
+                    boolean txtAreEmpty = txtNombre.getText().isEmpty() || txtCampNum.getText().isEmpty();
+                    if (!txtAreEmpty) {
+                        table1.setValueAt(txtNombre.getText(), selectedRow, 1);
+                        table1.setValueAt(txtCampNum.getText(), selectedRow, 2);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(null, "Debe llenar los Campos",
+                                "Campos vacíos", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
                 } else {
                     JOptionPane.showMessageDialog(null,"Debe seleccionar una fila",
                             "Mensaje", JOptionPane.INFORMATION_MESSAGE);
@@ -125,7 +133,6 @@ public class ViewTabla extends JPanel{
 
                 if(e.getClickCount() == 2){
                     selectedRow = table1.getSelectedRow();
-
                     txtNombre.setText(String.valueOf(table1.getValueAt(selectedRow,1)));
                     txtCampNum.setText(String.valueOf(table1.getValueAt(selectedRow,2)));
 
@@ -150,8 +157,13 @@ public class ViewTabla extends JPanel{
                     JOptionPane.showMessageDialog(null, "Debe seleccionar una fila",
                             "Seleccione", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    model.removeRow(selectedRow);
-                    table1.setModel(model);
+                    int opcion = JOptionPane.showConfirmDialog(null, "Desea eliminar este elemento?",
+                            "Confirmacion", JOptionPane.YES_NO_OPTION);
+                    System.out.println(opcion);
+                    if(opcion == 0) {
+                        model.removeRow(selectedRow);
+                        table1.setModel(model);
+                    }
                 }
             }
         });
@@ -197,7 +209,12 @@ public class ViewTabla extends JPanel{
         // TODO: place custom component creation code here
         columna = new String[]{"ID", "Nombre", "Campos Numericos"};
         archivo = new File(System.getProperty("user.dir"),"Tablas.txt");
-        model = new DefaultTableModel();
+        model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         isSelected = false;
 
         if(archivo.exists()){
@@ -209,7 +226,10 @@ public class ViewTabla extends JPanel{
                 table1.setModel(model);
                 table1.getColumnModel().getColumn(0).setMinWidth(35);
                 table1.getColumnModel().getColumn(0).setMaxWidth(35);
+                table1.setRowSelectionAllowed(true);
 
+                //table1.setRowSelectionAllowed(true);
+                //table1.setEnabled(false);
 
             } else {
                 String direccion = archivo.toURI().toString();
@@ -220,6 +240,7 @@ public class ViewTabla extends JPanel{
                 lastId = 0;
 
                 data = new LeerTabla(archivo, new File(url.toURI())).Leer();
+
                 model = new DefaultTableModel(data, columna) {
                     @Override
                     public boolean isCellEditable(int row, int column) {
@@ -229,6 +250,7 @@ public class ViewTabla extends JPanel{
                 table1 = new JTable(model);
                 table1.getColumnModel().getColumn(0).setMinWidth(35);
                 table1.getColumnModel().getColumn(0).setMaxWidth(35);
+                table1.setRowSelectionAllowed(true);//
 
                 lastId = Integer.parseInt(data[data.length - 1][0]);
 
