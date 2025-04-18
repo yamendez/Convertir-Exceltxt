@@ -4,9 +4,12 @@ import javax.swing.*;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.html.HTMLDocument;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+
+import static Menu.ViewMenu.img;
 
 public class ViewInstructions extends JFrame{
     private JPanel mainPanel;
@@ -17,6 +20,7 @@ public class ViewInstructions extends JFrame{
 
     public ViewInstructions() throws HeadlessException {
         this.setTitle("Instrucciones");
+        this.setIconImage(img.getImage());
         this.setVisible(true);
         this.setContentPane(mainPanel);
         this.setSize(650, 400);
@@ -30,15 +34,24 @@ public class ViewInstructions extends JFrame{
                 throw new RuntimeException(exception);
             }
         });
+        btnExcelInstruc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                instructionHtml = ViewInstructions.class.getResource("resources/text/excel.html");
+                try {
+                    txtpInstructions.setPage(instructionHtml);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     private void createUIComponents() throws IOException {
-        // TODO: place custom component creation code here
         txtpInstructions = new JTextPane();
         txtpInstructions.setContentType("text/html");
         HTMLDocument doc = (HTMLDocument) txtpInstructions.getDocument();
         txtpInstructions.setPage(new URL(String.valueOf(ViewInstructions.class.getResource("resources/text/tablas.html"))));
-//        txtpInstructions.setStyledDocument(doc);
 
 
     }

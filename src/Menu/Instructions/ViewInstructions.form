@@ -24,39 +24,27 @@
         <constraints border-constraint="East"/>
         <properties/>
         <border type="none"/>
+        <children/>
+      </grid>
+      <toolbar id="e11d4">
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
         <children>
           <component id="77383" class="javax.swing.JButton" binding="btnTablasInstruc">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
+            <constraints/>
             <properties>
               <text value="Tablas"/>
             </properties>
           </component>
-          <hspacer id="f2938">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-          </hspacer>
-          <vspacer id="2b372">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-          </vspacer>
           <component id="2f195" class="javax.swing.JButton" binding="btnExcelInstruc">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
+            <constraints/>
             <properties>
               <text value="Archivo Excel"/>
             </properties>
           </component>
         </children>
-      </grid>
+      </toolbar>
     </children>
   </grid>
 </form>

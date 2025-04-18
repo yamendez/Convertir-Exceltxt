@@ -1,0 +1,79 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+public class TablaToInsert {
+
+    public void generarInsert(String[][] tabla, String nomTabla, String campNumeros, boolean checkbox, FileWriter fw) throws IOException {
+        if (tabla == null || tabla.length == 0 || tabla[0] == null || tabla[0].length == 0) {
+            return; // Manejar tablas vacías
+        }
+
+        String campos = generarCampos(tabla[0]);
+        Set<Integer> columnasNumericas = obtenerColumnasNumericas(campNumeros);
+
+        StringBuilder valoresBuilder = new StringBuilder();
+        StringBuilder mensajeBuilder = new StringBuilder();
+
+        int count = 0;
+
+        for (int i = 1; i < tabla.length; i++) {
+            valoresBuilder.setLength(0); // Limpiar el StringBuilder
+
+            for (int j = 0; j < tabla[0].length; j++) {
+                String valor = (tabla[i][j] == null) ? "" : tabla[i][j].replace("\"", "").trim();
+                valor = valor.isEmpty() ? " " : valor;
+
+                if (columnasNumericas.contains(j)) {
+                    valoresBuilder.append(valor.isEmpty() ? "0" : valor);
+                } else {
+                    valoresBuilder.append("'").append(valor).append("'");
+                }
+                valoresBuilder.append(", ");
+            }
+
+            String valores = valoresBuilder.substring(0, valoresBuilder.length() - 2);
+
+            mensajeBuilder.setLength(0);
+            mensajeBuilder.append("insert into ").append(nomTabla);
+
+            if (checkbox) {
+                mensajeBuilder.append(" (").append(campos).append(")");
+            }
+
+            mensajeBuilder.append("\nvalues (").append(valores).append(");\n\n");
+            fw.write(mensajeBuilder.toString().toUpperCase());
+
+            count++;
+
+            if (count == 50 || i == tabla.length - 1) {
+                fw.write("COMMIT;\n\n");
+                count = 0;
+            }
+        }
+    }
+
+    private String generarCampos(String[] encabezados) {
+        StringBuilder camposBuilder = new StringBuilder();
+        for (String encabezado : encabezados) {
+            camposBuilder.append(encabezado).append(", ");
+        }
+        return camposBuilder.substring(0, camposBuilder.length() - 2);
+    }
+
+    private Set<Integer> obtenerColumnasNumericas(String campNumeros) {
+        Set<Integer> columnasNumericas = new HashSet<>();
+        if (campNumeros != null && !campNumeros.trim().isEmpty()) {
+            String[] selecColumn = campNumeros.replace(" ", "").split(",");
+            for (String s : selecColumn) {
+                try {
+                    columnasNumericas.add(Integer.parseInt(s) - 1);
+                } catch (NumberFormatException e) {
+                    // Manejar errores de formato si es necesario
+                }
+            }
+        }
+        return columnasNumericas;
+    }
+}

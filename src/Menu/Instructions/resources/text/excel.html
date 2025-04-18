@@ -2,9 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Archivo Excel</title>
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-
+<h1>Instrucciones de la Ventana Archivo Excel</h1>
+<p>
+    Esta parte del programa se encarga de leer un archivo excel y generar un archivo de texto
+    con los datos del archivo excel en formato de una sentencia SQL. Los pasos a seguir son
+    los siguientes.
+</p>
+<ol>
+    <li>
+        Primero debe seleccionar el tipo de sentencia SQL desea que el archivo genere.
+        Si desea generar una sentencia INSERT seleccione <b>Insertar</b>, y si es DELETE
+        seleccione <b>Eliminar</b>
+        <br>
+        <img src="images/EjemploSentencia.png">
+    </li>
+    <li>
+        Después debe elegir el nombre de la tabla se llenarán automáticamente los campos
+        <b>Nombre Tabla</b> y <b>Campos numéricos</b> con los datos que se ingresaron en
+        la ventana <b>Tablas</b>. El campo <b>Nombre Tabla</b> será también el nombre con
+        el que se guardara el archivo de texto que genere el programa.
+        <br>
+        <img src="images/EjemploCheckBox.PNG">
+        <br>
+        <img src="images/EjemploCheckBox2.PNG">
+    </li>
+    <li>
+        Si desea que se muestren los campos o columnas en la sentencia SQL seleccione
+        la opcion <b>Agregar atributos</b>.
+        <br>
+        <img src="images/EjemploAtributos.PNG">
+    </li>
+    <li>
+        Presione el boton <b>Buscar</b>, le aparecera una ventana emergente donde debera
+        seleccionar el archivo excel que se va a procesar.
+        <br>
+        <img src="images/EjemploBuscar.PNG">
+    </li>
+    <li>
+        Una vez llenada toda la informacion darle clic al boton <b>Ejecutar</b>.
+        <br>
+        <img src="images/EjemploEjecutar.PNG">
+        <br>
+        Esto generará un archivo de texto con el mismo nombre del campo <b>Nombre Tabla</b>, más
+        la fecha en que se ejecutó el programa en formato "<i>día mes anio</i>" sin espacios. El archivo de texto
+        aparecera en la misma direccion en la que está el archivo excel selecionado.
+        <br>
+        <img src="images/EjemploTXT.PNG">
+    </li>
+</ol>
 </body>
 </html>

@@ -91,12 +91,12 @@ public class LeerExcel {
                     }
 
                 }
-                AtomicBoolean vacio = new AtomicBoolean(false);
+                AtomicBoolean isEmpty = new AtomicBoolean(false);
                 a.forEach(cell -> {
-                    vacio.set(cell.toString().isEmpty());
+                    isEmpty.set(cell.toString().isEmpty());
                 });
 
-                if(!vacio.get()){
+                if(!isEmpty.get()){
                     r++;
                 }
 

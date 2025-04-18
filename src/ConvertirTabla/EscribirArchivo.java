@@ -8,7 +8,8 @@ import Excepciones.ValoresNulosException;
 public class EscribirArchivo{
 
     private FileWriter fw;
-    private File fileRead, fileWrite;
+    private final File fileRead;
+    private File fileWrite;
     private String[][] tabla;
     private String mensaje, nomTabla, campNumeros;
     private boolean checkbox, insertRB, deleteRB;
@@ -57,7 +58,7 @@ public class EscribirArchivo{
     }
 
     // Escribe los datos al txt en formato  INSERT SQL
-    public void insertSQL() throws IOException, ValoresNulosException {
+    public void insertSQL() throws IOException {
 
         int count = 0;
         String campos;
@@ -74,13 +75,7 @@ public class EscribirArchivo{
         boolean columnVacia = campNumeros.isEmpty();
 
         // Crea un arreglo de campos numericos
-        if(!columnVacia){
-            int[] columna = new int[selecColumn.length];
-            for(int i = 0; i < columna.length; i++){
-                columna[i] = Integer.parseInt(selecColumn[i]) -1;
-                selecColumn[i] = String.valueOf(columna[i]);
-            }
-        }
+        createArrayTypeNumber(columnVacia, selecColumn);
 
         for (int i = 1; i < tabla.length; i++){
 
@@ -89,11 +84,9 @@ public class EscribirArchivo{
             for (int j = 0; j < tabla[0].length; j++){
 
                 // si un campo es nulo se le asigna el valor ""
-                if(tabla[i][j] == null){
-                    tabla[i][j] = "";
-                }
-
-
+                cellIsEmpty(i, j);
+                builder = addQuotesIfString(columnVacia, tabla, i, j, cont, selecColumn);
+/*
                 // Elimina comillas dobles
                 if(tabla[i][j].contains("\"")){ tabla[i][j] = tabla[i][j].replace("\"", "");}
 
@@ -111,7 +104,7 @@ public class EscribirArchivo{
                     tabla[i][j] = tabla[i][j].trim();
                     tabla[i][j] = tabla[i][j].isEmpty() ? " " : tabla[i][j];//linea agregada
                     builder.append("'").append(tabla[i][j]).append("'").append(", ");
-                }
+                }*/
                 cont++;
             }
 
@@ -134,10 +127,7 @@ public class EscribirArchivo{
             count++;
 
             // Se agrega un commit cada 50 lineas o al final del archivo
-            if(count == 50 || i == tabla.length-1){
-                fw.write("COMMIT;\n\n");
-                count = 0;
-            }
+            count = getCount(count, i);
         }
 
     }
@@ -152,13 +142,7 @@ public class EscribirArchivo{
         boolean columnVacia = campNumeros.isEmpty();
 
         //Crea un arreglo de campos numericos
-        if(!columnVacia){
-            int[] columna = new int[selecColumn.length];
-            for(int i = 0; i < columna.length; i++){
-                columna[i] = Integer.parseInt(selecColumn[i]) -1;
-                selecColumn[i] = String.valueOf(columna[i]);
-            }
-        }
+        createArrayTypeNumber(columnVacia, selecColumn);
 
         // Concatenando los atributos y los valores
         for (int i = 1; i < tabla.length; i++) {
@@ -166,10 +150,9 @@ public class EscribirArchivo{
             int cont = 0;
 
             for(int j = 0; j < tabla[0].length; j++) {
-                if(tabla[i][j] == null){
-                    tabla[i][j] = "";
-                }
-                if (columnVacia) {
+                cellIsEmpty(i, j);
+                builder = addQuotesIfString(columnVacia, tabla ,i ,j ,cont , selecColumn);
+                /*if (columnVacia) {
                     // Elimina espacios en blanco
                     tabla[i][j] = tabla[i][j].trim();
                     tabla[i][j] = tabla[i][j].isEmpty()? " ": tabla[i][j];
@@ -182,7 +165,7 @@ public class EscribirArchivo{
                     tabla[i][j] = tabla[i][j].trim();
                     tabla[i][j] = tabla[i][j].isEmpty()? " ": tabla[i][j];
                     builder.append(tabla[0][j]).append("='".concat(tabla[i][j].concat("' and ")));
-                }
+                }*/
                 cont ++;
             }
 
@@ -200,12 +183,69 @@ public class EscribirArchivo{
             count++;
 
             // Se agrega un commit cada 50 lineas o al final del archivo
-            if(count == 50 || i == tabla.length-1){
-                fw.write("COMMIT;\n\n");
-                count = 0;
-            }
+            count = getCount(count, i);
         }
 
+    }
+
+    private StringBuilder addQuotesIfString(boolean columnaVacia, String[][] tabla, int i, int j,
+                                   int cont, String[] selecColumn){
+        if(columnaVacia) {
+            // Elimina espacios en blanco
+            tabla[i][j] = tabla[i][j].trim();
+            tabla[i][j] = tabla[i][j].isEmpty()? " ": tabla[i][j];
+            ifTypeNumberAddQuote(tabla, i, j);
+        }
+        else if (columnaExiste(cont, selecColumn)) {
+            // No agrega comillas si los campos son numericos
+            tabla[i][j] = tabla[i][j].isEmpty()? tabla[i][j] = "0": tabla[i][j];
+            if(insertRB) {
+                builder.append(tabla[i][j]).append(", ");
+            }
+            else {
+                builder.append(tabla[0][j]).append("=".concat(tabla[i][j].concat(" and ")));
+            }
+        }
+        else {
+            // Elimina espacios en blanco
+            tabla[i][j] = tabla[i][j].trim();
+            tabla[i][j] = tabla[i][j].isEmpty()? " ": tabla[i][j];
+            ifTypeNumberAddQuote(tabla, i, j);
+        }
+        return builder;
+    }
+
+    private void ifTypeNumberAddQuote(String[][] tabla, int i, int j) {
+        if(insertRB) {
+            builder.append("'").append(tabla[i][j]).append("'").append(", ");
+        }
+        else {
+            builder.append(tabla[0][j]).append("='".concat(tabla[i][j].concat("' and ")));
+        }
+    }
+
+    private static void createArrayTypeNumber(boolean columnVacia, String[] selecColumn) {
+        if(!columnVacia){
+            int[] columna = new int[selecColumn.length];
+            for(int i = 0; i < columna.length; i++){
+                columna[i] = Integer.parseInt(selecColumn[i]) -1;
+                selecColumn[i] = String.valueOf(columna[i]);
+            }
+        }
+    }
+
+    private int getCount(int count, int i) throws IOException {
+        if(count == 50 || i == tabla.length-1){
+            fw.write("COMMIT;\n\n");
+            count = 0;
+        }
+        return count;
+    }
+
+    private void cellIsEmpty(int i, int j) {
+        if(tabla[i][j] == null){
+            tabla[i][j] = "";
+        }
     }
 
 }

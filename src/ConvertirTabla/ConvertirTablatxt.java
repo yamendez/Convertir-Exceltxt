@@ -101,13 +101,9 @@ public ConvertirTablatxt() {
                 JOptionPane.showMessageDialog(null, "Operacion realizada correctamente",
                         "Mensaje", JOptionPane.INFORMATION_MESSAGE);
 
-                if (workbook != null) workbook.close();
-
-
-                //txtBuscar.setText("");
-//                txtNomTabla.setText("");
-//                txtNumeros.setText("");
-
+                if (workbook != null) {
+                    workbook.close();
+                }
             }
         } catch (Exception ex){
             JOptionPane.showMessageDialog(null, "Error: " + ex, "Error", JOptionPane.ERROR_MESSAGE);
