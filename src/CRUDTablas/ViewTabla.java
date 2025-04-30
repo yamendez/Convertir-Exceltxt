@@ -14,8 +14,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -86,13 +84,6 @@ public class ViewTabla extends JPanel{
                     try {
                         uri = new URI(direccion);
                         URL url = uri.toURL();
-                        /*if(archivo.canRead()){
-                            System.out.println("se puede leer.");
-                            System.out.println("archivo: " + archivo.getAbsolutePath());
-                            System.out.println(new File("Tablas.txt").getAbsolutePath());
-                        } else{
-                            System.out.println("no se puede leer.");
-                        }*/
 
                         new EscribirTabla(archivo, escribir, newTabla).escribir();
 
@@ -196,15 +187,6 @@ public class ViewTabla extends JPanel{
         });
     }
 
-//    public static void main(String[] args){
-//        JFrame frame = new JFrame("CRUD Tablas");
-//        frame.setContentPane(new ViewTabla().mainPanel);
-//        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        frame.setSize(400, 300);
-//        frame.setLocationRelativeTo(null);
-//        frame.setVisible(true);
-//    }
-
     private void createUIComponents() throws IOException, URISyntaxException {
         // TODO: place custom component creation code here
         columna = new String[]{"ID", "Nombre", "Campos Numericos"};
@@ -227,9 +209,6 @@ public class ViewTabla extends JPanel{
                 table1.getColumnModel().getColumn(0).setMinWidth(35);
                 table1.getColumnModel().getColumn(0).setMaxWidth(35);
                 table1.setRowSelectionAllowed(true);
-
-                //table1.setRowSelectionAllowed(true);
-                //table1.setEnabled(false);
 
             } else {
                 String direccion = archivo.toURI().toString();

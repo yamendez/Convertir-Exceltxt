@@ -1,8 +1,6 @@
 package CRUDTablas;
 
-import java.awt.*;
 import java.io.*;
-import java.util.List;
 
 public class EscribirTabla {
     private File archivo;

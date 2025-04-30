@@ -4,6 +4,9 @@ import Excepciones.ValoresNulosException;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -80,55 +83,29 @@ public class LeerExcel {
     public void leerXls() throws IOException, ValoresNulosException{
         Sheet sheet = workbook.getSheetAt(0);
 
-        // Se obtienen el número de filas y columnas
-        int[] prueba = Stream.of(sheet).flatMapToInt(s -> {
-            int r = 0;
-            int c = 0;
-            for(Row a: s){
-                for(Cell b: a) {
-                    if (b != null && r == 0 && !b.toString().isEmpty()) {
-                        c++;
-                    }
+        List<String[]> filas = new ArrayList<>();
+        StringBuilder data= new StringBuilder();
 
-                }
-                AtomicBoolean isEmpty = new AtomicBoolean(false);
-                a.forEach(cell -> {
-                    isEmpty.set(cell.toString().isEmpty());
-                });
-
-                if(!isEmpty.get()){
-                    r++;
+        // se obtienen las filas y columnas de la hoja
+        for (Row r: sheet) {
+            for (Cell c : r) {
+                // si em primer campo esta vacio, salta a la siguiente fila
+                if (c.getColumnIndex() == 0 && c.toString().isBlank()) {
+                    break;
                 }
 
+                // agrega la celda al builder
+                data.append(c).append(",");
             }
-            return IntStream.of(r,c);
-        }).toArray();
 
-        int rows = prueba[0];
-        int columns = prueba[1];
-
-        // Se crea un arreglo con el número de filas y columnas
-        tabla = new String[rows][columns];
-
-        DataFormatter dataFormatter = new DataFormatter();
-
-        // Llenando el arreglo de datos
-        Stream.of(sheet).forEach(s -> {
-            int i = 0;
-            for(Row fila: s){
-                for (Cell celda: fila){
-                    if( fila.getRowNum() <= rows-1){//celda.getColumnIndex() == i &&
-
-                        // Cambiando datos a formato de texto y agregándolos al arreglo
-                        tabla[fila.getRowNum()][celda.getColumnIndex()] = dataFormatter.formatCellValue(celda);
-
-                    }
-                    i++;
-                }
-
-                i = 0;
+            // si el builder tiene datos, se agrega a la lista de filas
+            if (!data.toString().isBlank()) {
+                filas.add(data.toString().split(","));
+                data.setLength(0);
             }
-        });
+        }
+
+        tabla = filas.toArray(new String[0][]);
 
         // Se llama al método Escribir
         new EscribirArchivo(fileRead, tabla, nomTabla, campNumeros, checkbox, insertRB, deleteRB).escribir();
@@ -142,7 +119,7 @@ public class LeerExcel {
      * Llama al método <code>readSeparador(String separador)</code>, lee el archivo Excel(.csv), pasa
      * los parametros recibidos a la clase <code>EscribirArchivo</code> y llama al método <code>escribir()</code>.
      */
-    public void Leer(){
+    public void leerCsv(){
         try {
             readSeparador(",");
             EscribirArchivo ea = new EscribirArchivo(fileWrite, tabla, nomTabla,
@@ -179,45 +156,28 @@ public class LeerExcel {
      * @throws IOException Si hubo un error al leer el archivo
      */
     public String[][] readSeparador(String separador) throws IOException {
-        FileReader fr = new FileReader(fileRead);
-        BufferedReader br = new BufferedReader(fr);
 
-        br.mark(100000000);
-        String linea = br.readLine();
-
-
+        List<String[]> filas = new ArrayList<>();
         String[] data;
-        int num_filas = 0;
-        int num_column = 0;
-        data = linea.split(separador);
 
-        // Numero de columnas
-        for(String ignored : data){
-            num_column ++;
+        try (FileReader fr = new FileReader(fileRead);
+             BufferedReader br = new BufferedReader(fr)) {
+
+            String linea;
+            while ((linea = br.readLine()) != null) {
+
+                // separa los campos
+                data = linea.split(separador);
+
+                // verifica que no esten vacios
+                if (!(data.length == 0) && !data[0].isBlank()) {
+                    filas.add(data);
+                }
+            }
+            // convierte filas en una matriz
+            tabla = filas.toArray(new String[0][]);
+
         }
-
-        // Número de filas
-        while(linea != null) {
-            linea = br.readLine();
-            num_filas ++;
-        }
-
-        tabla = new String[num_filas][num_column];
-
-        br.reset();
-        linea = br.readLine();
-        int i = 0;
-
-        // Guardando los datos en un Arreglo
-        while (linea != null) {
-            data = linea.split(separador);
-
-            System.arraycopy(data, 0, tabla[i], 0, tabla[0].length);
-
-            linea = br.readLine();
-            i++;
-        }
-        br.close();
         return tabla;
     }
 

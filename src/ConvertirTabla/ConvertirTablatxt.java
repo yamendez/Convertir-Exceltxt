@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
@@ -39,10 +40,9 @@ public class ConvertirTablatxt extends JPanel{
      */
 
 public ConvertirTablatxt() {
+    panelMain.setPreferredSize(new Dimension(450,250));
     this.add(panelMain);
-    cmbTabla.addItemListener(e -> {
 
-    });
     btnBuscar.addActionListener(e -> {
         JFileChooser fc = new JFileChooser();
 
@@ -93,7 +93,7 @@ public ConvertirTablatxt() {
                 else if(direccion.endsWith(".csv")) {
 
                     new LeerExcel(file, nomTabla, campNumeros, checkbox, insertRButton, deleteRButton,
-                            new File(url.toURI())).Leer();
+                            new File(url.toURI())).leerCsv();
 
                     System.gc();
                 }
@@ -123,7 +123,9 @@ public ConvertirTablatxt() {
         String campos = dataCmb[indexCmb][2];
         txtNomTabla.setText(nombre);
         txtNumeros.setText(campos);
+
     });
+
 }
 
     private void createUIComponents() throws IOException {

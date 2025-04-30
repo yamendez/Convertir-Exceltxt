@@ -6,8 +6,6 @@ import CRUDTablas.ViewTabla;
 import ConvertirTabla.ConvertirTablatxt;
 import Menu.Instructions.ViewInstructions;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,20 +21,19 @@ public class ViewMenu extends JFrame{
 
 
     public ViewMenu() {
-        tabMenu.addMouseListener(new MouseAdapter() {
+        /*tabMenu.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(tabMenu.getSelectedIndex() == 1) {
+                *//*if(tabMenu.getSelectedIndex() == 1) {
 
                     conTablatxt = new ConvertirTablatxt();
                     tabMenu.addTab("Archivo Excel", null, conTablatxt, null);
                     tabMenu.remove(1);
-                    //tabMenu.addTab("Archivo", null, conTablatxt,null);
 
 
-                }
+                }*//*
             }
-        });
+        });*/
         //jmItemInstruc.addActionListener(e -> JOptionPane.showMessageDialog(null, "Prueba instrucciones", "Mensaje", JOptionPane.PLAIN_MESSAGE));
     }
 
@@ -69,13 +66,6 @@ public class ViewMenu extends JFrame{
         File archivo = new File(System.getProperty("user.dir"),"Tablas.txt");
 
         tabMenu = new JTabbedPane();
-//        menuBar = new JMenuBar();
-//        jMenu = new JMenu("Ayuda");
-//        jmItemInstruc = new JMenuItem("Instrucciones");
-//        jmItemAbout = new JMenuItem("Acerca");
-//        jMenu.add(jmItemInstruc);
-//        jMenu.add(jmItemAbout);
-//        menuBar.add(jMenu);
 
         if(archivo.exists()) {
 
