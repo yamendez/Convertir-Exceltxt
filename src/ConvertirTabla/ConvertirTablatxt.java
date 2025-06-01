@@ -1,5 +1,6 @@
 package ConvertirTabla;
 
+import CRUDTablas.Subscriptor;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
@@ -13,7 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ConvertirTablatxt extends JPanel{
+public class ConvertirTablatxt extends JPanel implements Subscriptor {
     private JPanel panelMain;
     private JButton btnEjecutar;
     private JPanel panelArchivo;
@@ -151,6 +152,23 @@ public ConvertirTablatxt() {
                 cmbTabla = new JComboBox<>(items);
             }
         }
+
+    }
+
+    @Override
+    public void update(String[][] data) {
+        dataCmb = data;
+        String[] items = new String[dataCmb.length];
+
+        for (int i = 0; i < dataCmb.length; i++) {
+            for (int j = 0; j < dataCmb[0].length; j++) {
+                if(j == 1) {
+                    items[i] = dataCmb[i][j];
+                }
+            }
+        }
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(items);
+        cmbTabla.setModel(model);
 
     }
 }

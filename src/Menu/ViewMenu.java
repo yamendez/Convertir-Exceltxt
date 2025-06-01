@@ -69,8 +69,12 @@ public class ViewMenu extends JFrame{
 
         if(archivo.exists()) {
 
-            tabMenu.addTab("Tablas", null, new ViewTabla(), null);
-            tabMenu.addTab("Archivo Excel", null, new ConvertirTablatxt(), null);
+            ViewTabla viewTabla = new ViewTabla();
+            ConvertirTablatxt tablatxt = new ConvertirTablatxt();
+            viewTabla.notificador.subscribe("save", tablatxt);
+
+            tabMenu.addTab("Tablas", null, viewTabla, null);
+            tabMenu.addTab("Archivo Excel", null, tablatxt, null);
 
         } else {
             new FileWriter(archivo, false);

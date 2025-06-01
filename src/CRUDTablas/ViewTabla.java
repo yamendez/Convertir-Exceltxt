@@ -1,5 +1,7 @@
 package CRUDTablas;
 
+import ConvertirTabla.LeerExcel;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -39,9 +41,11 @@ public class ViewTabla extends JPanel{
     private String[][] data;
     private boolean isSelected;
     private String[] columna;
+    public Notificador notificador;
 
 
     public ViewTabla() {
+        notificador = new Notificador();
         mainPanel.setPreferredSize(new Dimension(400,330));
         this.add(mainPanel);
 
@@ -86,6 +90,8 @@ public class ViewTabla extends JPanel{
                         URL url = uri.toURL();
 
                         new EscribirTabla(archivo, escribir, newTabla).escribir();
+                        notificador.notificar("save", newTabla);
+                        //System.out.println("se notifico a");
 
                     } catch (URISyntaxException | IOException ex) {
                         throw new RuntimeException(ex);
@@ -150,7 +156,7 @@ public class ViewTabla extends JPanel{
                 } else {
                     int opcion = JOptionPane.showConfirmDialog(null, "Desea eliminar este elemento?",
                             "Confirmacion", JOptionPane.YES_NO_OPTION);
-                    System.out.println(opcion);
+
                     if(opcion == 0) {
                         model.removeRow(selectedRow);
                         table1.setModel(model);
@@ -168,7 +174,8 @@ public class ViewTabla extends JPanel{
                     try {
                         URI uri = new URI(direccion);
                         URL url = uri.toURL();
-                        data = new LeerTabla(archivo, new File(url.toURI())).Leer();
+//                        data = new LeerExcel(archivo, new File(url.toURI())).leerTablas();
+                        data = new LeerExcel(new File(url.toURI())).leerTablas();
                         model = new DefaultTableModel(data, columna){
                             @Override
                             public boolean isCellEditable(int row, int column) {
@@ -218,7 +225,8 @@ public class ViewTabla extends JPanel{
 
                 lastId = 0;
 
-                data = new LeerTabla(archivo, new File(url.toURI())).Leer();
+//                data = new LeerTabla(archivo, new File(url.toURI())).Leer();
+                data = new LeerExcel(new File(url.toURI())).leerTablas();
 
                 model = new DefaultTableModel(data, columna) {
                     @Override

@@ -1,5 +1,5 @@
 package CRUDTablas;
 
-public interface Subscriber {
-    String[] update();
+public interface Subscriptor {
+    void update(String[][] data);
 }
